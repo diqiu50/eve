@@ -1,0 +1,34 @@
+html,body,div,ul,li,span
+{
+    margin: 0;
+    padding: 0;
+    font-family: "SourceCodePro-Medium"
+}
+
+html,body,div.sys-editor
+{
+    background: #47484b;
+    width: 100;
+    height: 100;
+}
+
+body
+{
+    margin: 0px;
+}
+
+div.sys-header
+{
+    display: block;
+    background: #3c3f41;
+}
+
+div.sys-header ul li
+{
+    display: block;
+    float: left;
+    margin-left: 10px;
+    color: #cbe0e0;
+    font-size: 14px;
+    font-family:"SourceCodePro-Medium";
+}
