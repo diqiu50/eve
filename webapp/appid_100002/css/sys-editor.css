@@ -2,12 +2,12 @@ html,body,div,ul,li,span
 {
     margin: 0;
     padding: 0;
-    font-family: "SourceCodePro-Medium"
+    font-family: cursive;
 }
 
 html,body,div.sys-editor
 {
-    background: #47484b;
+    background: #3c3f41;
     width: 100;
     height: 100;
 }
@@ -17,18 +17,58 @@ body
     margin: 0px;
 }
 
+div.sys-title
+{
+    background: #47484b;
+    width: auto;
+    height: 20px;
+}
+
+div.sys-logo
+{
+    padding-top: 4px;
+    display: block;
+    color: #cbe0e0;
+    text-align: center;
+    height: 20px;
+    font-size: 12px;
+    vertical-align:middle;
+    cursor: default;
+}
+
 div.sys-header
 {
+    padding-left: 2px;
     display: block;
-    background: #3c3f41;
+    background: #47484b;
+    height: 24px;
 }
 
 div.sys-header ul li
 {
     display: block;
     float: left;
-    margin-left: 10px;
     color: #cbe0e0;
-    font-size: 14px;
-    font-family:"SourceCodePro-Medium";
+    font-size: 13px;
+}
+
+div.sys-header li
+{
+    line-height: 20px;
+    height: 20px;
+    text-align: center;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    cursor:default;
+}
+
+div.sys-header  li:hover
+{
+    background: #2d2e30;
+}
+
+div.sys-body
+{
+    background: #47484b;
+    height: 100;
 }
