@@ -35,8 +35,8 @@ var AppMgr = {
 	},
 
 	createApp: function(hostname, url, callback){
-		//console.log("SELECT * from apps_t where hostname='" + hostname + "' and url='" + url + "'");
-		db.query("SELECT * from apps_t where hostname='" + hostname + "' and url='" + url + "'",
+		console.log("SELECT * from apps_t where (hostname='" + hostname + "' or hostname='*') and url='" + url + "'");
+		db.query("SELECT * from apps_t where (hostname='" + hostname + "' or hostname='*') and url='" + url + "'",
 			function(err, rows, fields){
 				if (err) throw err;
 				var appid;
