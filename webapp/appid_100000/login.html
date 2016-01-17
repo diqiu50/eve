@@ -1,0 +1,29 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js">
+</script>
+<script>
+$(document).ready(function(){
+    $("#bt1").click(function(){
+        $.ajax({
+            url: "/svrcmd/login",
+            type: "post",
+            dataType : "json",
+            data: {name:"ice", passwd:"12345" },
+            success : function(data,status){
+                console.log(data["status"]);
+                $("#txt1").text(data["status"]) 
+            }
+        });});
+    });
+</script>
+</head>
+<body>
+
+<button id="bt1">login</button>
+<p/>
+<span id="txt1" style="width:280px;height:80px"></span>
+
+</body>
+</html>

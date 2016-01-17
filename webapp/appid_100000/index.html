@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js">
+</script>
+<script>
+$(document).ready(function(){
+    $("#bt2").click(function(){
+        $.ajax({
+            url: "/svrcmd/userinfo",
+            type: "post",
+            dataType : "json",
+            success : function(data,status){
+                console.log(data["name"]);
+                $("#txt2").text(data["name"])   
+            }
+        });});
+    });
+</script>
+</head>
+<body>
+<img src="logo.png"/>
+<p/>
+<a href="login.html" target="_blank">login</a>                                         
+<p/>
+<button id="bt2">button</button>
+<span id="txt2" style="width:280px;height:80px"></span>
+
+</body>
+</html>
