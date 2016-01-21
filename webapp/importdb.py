@@ -5,7 +5,7 @@ import os
 
 if len(sys.argv) >=4:
     dirname = sys.argv[1]
-    if dirname[-1] = '/'
+    if dirname[-1] == '/':
         dirname = dirname[0:-1];
     appid = int(sys.argv[2])
     mainpage = sys.argv[3]
