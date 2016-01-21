@@ -2,12 +2,12 @@ html,body,div,ul,li,span
 {
     margin: 0;
     padding: 0;
-    font-family: "SourceCodePro-Medium"
+    font-family:"Source Code Pro";
 }
 
 html,body,div.sys-editor
 {
-    background: #47484b;
+    background: #3c3f41;
     width: 100;
     height: 100;
 }
@@ -17,18 +17,118 @@ body
     margin: 0px;
 }
 
+div.sys-title
+{
+    background: #47484b;
+    width: auto;
+    height: 20px;
+}
+
+div.sys-logo
+{
+    padding-top: 4px;
+    display: block;
+    color: #f2fcfc;
+    text-align: center;
+    height: 20px;
+    font-size: 12px;
+    vertical-align:middle;
+    cursor: default;
+}
+
 div.sys-header
 {
+    padding-left: 8px;
     display: block;
-    background: #3c3f41;
+    background: #47484b;
+    height: 27px;
 }
 
 div.sys-header ul li
 {
     display: block;
     float: left;
-    margin-left: 10px;
-    color: #cbe0e0;
-    font-size: 14px;
-    font-family:"SourceCodePro-Medium";
+    color: #f2fcfc;
+    font-size: 12px;
+    font-weight: 100
+}
+
+div.sys-header li
+{
+    line-height: 24px;
+    height: 20px;
+    text-align: center;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    cursor:default;
+}
+
+div.sys-header  li:hover
+{
+    background: #2d2e30;
+}
+/******************** files tree start *****************************/
+div.sys-body-left
+{
+    padding-left: 0.4em;
+    margin-left: 6px;
+    background: #333639;
+    width: 230px;
+    height: auto;
+}
+
+div.sys-body-left div.sys-files-tree-title 
+{
+    display: block;
+    font-size: 6px;
+    line-height: 30px;
+    color: #b4b4b4;
+    cursor: default;
+}
+
+div.sys-body-left div.sys-files-tree-title span.sys-app-name:hover
+{
+    border: 3px solid ;
+    -moz-border-radius: 3px;      /* Gecko browsers */
+    -webkit-border-radius: 3px;   /* Webkit browsers */
+    border-radius:3px;            /* W3C syntax */
+}
+
+div.sys-files-tree-title span.sys-icon
+{
+    padding-bottom:-10px; 
+    height: 3px;
+    width: 3px;
+    border-right: 3px solid transparent;
+    border-left: 3px solid  transparent;
+    border-top: 6px solid #7e7e7e;
+}
+
+/*span.triangle-right*/
+{
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 3px solid transparent;
+    border-left: 6px solid  #7e7e7e;
+    border-bottom: 3px solid transparent;
+    content: '\25BC';
+}
+
+/*span.triangle-down*/
+{
+    display: block;
+    width: 0;
+    height: 0;
+    border-right: 3px solid transparent;
+    border-left: 3px solid  transparent;
+    border-top: 6px solid #7e7e7e;
+}
+
+/******************** files tree end *****************************/
+
+div.sys-body
+{
+    background: #47484b;
+    height: 100;
 }
