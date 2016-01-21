@@ -11,6 +11,7 @@ var Application = {
 		app.appname = app_conf["appname"];
 		app.mDbConn = db;
 		app.mResources = [],
+		app.mComponents= [],
 		app.loadResource = function(url, callback){
 			var path = "/appid_" + this.appid + "/";
 			if (url.indexOf(path) == 0) {
@@ -28,7 +29,7 @@ var Application = {
 					return;
 				}
 				
-				var filename = AppConfig.web_base + "/appid_" + app.appid + rows[0].uri;
+				var filename = AppConfig.web_base + "/appid_" + this.appid + rows[0].uri;
 				var dirname = filename.substring(0, filename.lastIndexOf('/'));
 				if (!fs.existsSync(dirname)) {
 					mkdirp.sync(dirname);
@@ -36,10 +37,35 @@ var Application = {
 				fs.writeFile(filename, rows[0].contents, function(err) {
 					if (err) throw err;	
 					//console.log("write file: " + filename); 
-					callback(true, "/appid_" + app.appid + rows[0].uri);
+					callback(true, "/appid_" + this.appid + rows[0].uri);
 				});
 			});
-		};
+		},
+		app.doAction = function(acpid, req, res, callback) {
+			if (this.mComponents[acpid]) {
+				this.mComponents[acpid].doAction(req, res, callback);
+			} else {
+				var filename = AppConfig.web_base + "/appid_" + this.appid + "/" + acpid + ".js";
+				fs.exists(filename, function(exists) {
+					if (!exists) {
+						app.loadResource("/"+ acpid+".js", function(rslt, filename) {
+							if (rslt) {
+								var moudule = require("./"+filename);		
+								app.mComponents[acpid] = moudule;
+								moudule.doAction(req, res, callback);
+							} else {
+								callback(false);
+							}
+
+						});
+					} else {
+						var moudule = require("./" + filename);		
+						app.mComponents[acpid] = moudule;
+						moudule.doAction(req, res, callback);
+					}
+				});
+			}
+		}
 		return app;
 	}
 };

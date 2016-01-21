@@ -63,35 +63,20 @@ app_svr.use(function(req, res, next) {
 app_svr.use(express.static(AppConfig.web_base, {index:"index.html"}));
 
 
-app_svr.all('/svrcmd/:reqid', function(req, res) {
-	if (req.params.reqid == "login"){
-		req.session.userinfo= req.body;
-		res.json({status:"success"});
-	}
-	if (req.params.reqid == "userinfo")
-	{
-		console.log(req.session.userinfo);
-		res.json(req.session.userinfo);
-	}
-	if (req.params.reqid == "createdata")
-	{
-		console.log(req.session.userinfo);
-		res.json(req.session.userinfo);
-	}
-	if (req.params.reqid == "modifydata")
-	{
-		console.log(req.session.userinfo);
-		res.json(req.session.userinfo);
-	}
-	if (req.params.reqid == "retrievedata")
-	{
-		console.log(req.session.userinfo);
-		res.json(req.session.userinfo);
-	}
-	if (req.params.reqid == "querydata")
-	{
-		console.log(req.session.userinfo);
-		res.json(req.session.userinfo);
+app_svr.all('/svrcmd/:acpid', function(req, res) {
+	var acpid = req.params.acpid;
+	var app = AppMgr.getApp(req.session.appid);
+	if (!app) {
+		console.log("505 app not find: " + req.originalUrl);
+		res.send("500 App not find: " + req.originalUrl);
+	} else {
+		app.doAction(acpid, req, res, function(rslt, respone){
+			if (rslt != true) {
+				res.json({status:"500 action failed: " + req.originalUrl});
+			} else {
+				res.json({status:"success"});
+			}
+		});
 	}
 });
 
