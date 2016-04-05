@@ -17,8 +17,8 @@ try:
     conn=conn = pymysql.connect(host='192.168.99.184',user='root',passwd='12345',db='ice_db',port=3306)
     cur=conn.cursor()
 
-    sql = 'insert into apps_t values(%s, %s, %s, %s, %s, %s)';
-    cur.execute(sql, (appid, "", "", "*", "/appid_"+str(appid)+ "/" + mainpage, ""));
+    sql = 'insert into apps_t values(%s, %s, %s, %s, %s)';
+    cur.execute(sql, (appid, "", "*", "/appid_"+str(appid)+ "/" + mainpage, ""));
     for r in cur.fetchall():
         print(r);
 
