@@ -31,8 +31,11 @@ CREATE TABLE `apps_t` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+<<<<<<< HEAD
 insert into apps_t values("100000", "", "*", "index.html", NULL);
 
+=======
+>>>>>>> c0c73e6435d6a2ee5a41202e2040d9bac2121f5e
 --
 -- Table structure for table `res_t`
 --
