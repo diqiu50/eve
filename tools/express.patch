@@ -1,0 +1,13 @@
+92a93,104
+> 	
+> 	//Ice add
+> 	if (req.session) {
+> 		var appid = req.session.appid;
+> 		if (appid) {
+> 			if (path.indexOf("/appid_" + appid + "/") != 0) {
+> 				path = "/appid_" + appid + path;
+> 			}
+> 
+> 			console.log("read_path: " + path);
+> 		}	
+> 	}
