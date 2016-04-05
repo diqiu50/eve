@@ -19,8 +19,8 @@ var Application = {
 			}
 			if (url == "/") url = "/index.html"
 			
-			console.log("SELECT uri, contents from res_t where uri='" + 
-					url + "' and app_id='" + this.appid + "'");
+			//console.log("SELECT uri, contents from res_t where uri='" + 
+			//		url + "' and app_id='" + this.appid + "'");
 			this.mDbConn.query("SELECT uri, contents from res_t where uri='" + 
 					url + "' and app_id='" + this.appid + "'", function(err, rows, fields) {
 				if (err) throw err;	
