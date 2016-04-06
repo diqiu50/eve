@@ -11,10 +11,10 @@ if len(sys.argv) >=4:
     mainpage = sys.argv[3]
 else:
     print("missing args!");
-    print("ex: importdb.py dirname appid index.html");
+    print("ex: importdb.py dirname appid /index.html");
     exit();
 try:
-    conn=conn = pymysql.connect(host='192.168.99.184',user='root',passwd='12345',db='ice_db',port=3306)
+    conn=conn = pymysql.connect(host='127.0.0.1',user='root',passwd='12345',db='ice_db',port=3306)
     cur=conn.cursor()
 
     sql = 'insert into apps_t values(%s, %s, %s, %s, %s)';
