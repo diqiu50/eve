@@ -5,7 +5,7 @@ var Application = require('./application');
 var async = require('async')
 
 var db = mysql.createConnection({
-		host : '192.168.99.184',
+		host : '127.0.0.1',
 		user : 'root',
 		password : '12345',
 		database : 'ice_db'

@@ -18,6 +18,7 @@
 --
 -- Table structure for table `apps_t`
 --
+use ice_db;
 
 DROP TABLE IF EXISTS `apps_t`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
