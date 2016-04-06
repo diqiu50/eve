@@ -2,10 +2,10 @@
 
 var mysql = require('mysql');                    
 var Application = require('./application');                    
-var async = require('async')
+var AppConfig = require('./config');
 
 var db = mysql.createConnection({
-		host : '192.168.99.184',
+		host : AppConfig.db_ipaddr,
 		user : 'root',
 		password : '12345',
 		database : 'ice_db'
@@ -42,9 +42,11 @@ var AppMgr = {
 				var appid;
 				if (rows.length == 1) {
 					//console.log("find app: " + rows[0].app_id);
-					var app = Application.create(rows[0].app_id, rows[0], db);
-					AppMgr.smApps[rows[0].app_id] = app;
 					appid = rows[0].app_id;
+					var app = Application.create(appid, rows[0], db);
+					AppMgr.smApps[appid] = app;
+					var key = hostname + "_" + url;	
+					AppMgr.smMapping[key] = appid;
 				} else {
 					//console.log("not find app: "+ hostname + " " + url);
 				}

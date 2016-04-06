@@ -80,7 +80,6 @@ app_svr.all('/svrcmd/:acpid', function(req, res) {
 	}
 });
 
-var option = {root: 'webapp'}
 
 app_svr.use(function(req, res, next) {
 	console.log("404 url 0: " + req.originalUrl);
