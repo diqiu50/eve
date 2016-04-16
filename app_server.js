@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var Url = require('url');
+var cluster = require('cluster');
 var AppMgr = require('./appmgr');
 var AppConfig = require('./config');
 
@@ -21,7 +22,7 @@ app_svr.use(bodyParser.urlencoded({extended: true}));
 app_svr.use(cookieParser());
 
 app_svr.use(function(req, res, next) {
-	console.log("access url: " + req.originalUrl);
+	console.log("access url: " + req.originalUrl + ",\t" + process.pid);
 	var appid;
 	var url = Url.parse(req.originalUrl, true);
 	if (url.path.indexOf("/appid_") == 0) {
@@ -112,6 +113,35 @@ app_svr.use(function(req, res, next) {
 });
 
 
+var cpus = require('os').cpus().length;
+
+if (cluster.isMaster) {
+	console.log("master start...");
+	var worker;
+	for (var i = 0; i < 2; i++) {
+		worker = cluster.fork();
+	}
+
+	cluster.on("listening", function(worker, address) {
+		 console.log('listening: worker ' + worker.process.pid +', Address: '+address.address+":"+address.port);
+	});
+
+	cluster.on('exit', function (worker, code, signal) {
+		console.log('worker ' + worker.process.pid + ' died');
+	});
+
+} else {
+	AppMgr.start(function() {
+		var server = app_svr.listen(8823, function() {
+			console.log("started")
+		});
+		server.on('close', function() {
+			AppMgr.stop();
+		});
+	});
+}
+
+/*
 AppMgr.start(function() {
 	var server = app_svr.listen(8823, function() {
 		var host = server.address().address;
@@ -122,3 +152,4 @@ AppMgr.start(function() {
 		AppMgr.stop();
 	});
 });
+*/
