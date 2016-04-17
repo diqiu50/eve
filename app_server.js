@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var Url = require('url');
-var cluster = require('cluster');
+//var cluster = require('cluster');
 var AppMgr = require('./appmgr');
 var AppConfig = require('./config');
 
@@ -22,7 +22,7 @@ app_svr.use(bodyParser.urlencoded({extended: true}));
 app_svr.use(cookieParser());
 
 app_svr.use(function(req, res, next) {
-	console.log("access url: " + req.originalUrl + ",\t" + process.pid);
+	console.log("access url: " + req.originalUrl);
 	var appid;
 	var url = Url.parse(req.originalUrl, true);
 	if (url.path.indexOf("/appid_") == 0) {
@@ -113,6 +113,7 @@ app_svr.use(function(req, res, next) {
 });
 
 
+/*
 var cpus = require('os').cpus().length;
 
 if (cluster.isMaster) {
@@ -140,8 +141,8 @@ if (cluster.isMaster) {
 		});
 	});
 }
+*/
 
-/*
 AppMgr.start(function() {
 	var server = app_svr.listen(8823, function() {
 		var host = server.address().address;
@@ -152,4 +153,3 @@ AppMgr.start(function() {
 		AppMgr.stop();
 	});
 });
-*/

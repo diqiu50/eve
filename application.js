@@ -45,10 +45,10 @@ var Application = {
 			if (this.mComponents[acpid]) {
 				this.mComponents[acpid].doAction(req, res, callback);
 			} else {
-				var filename = AppConfig.web_base + "/appid_" + this.appid + "/" + acpid + ".js";
+				var filename = AppConfig.web_base + "/appid_" + this.appid + "/app_src/" + acpid + ".js";
 				fs.exists(filename, function(exists) {
 					if (!exists) {
-						app.loadResource("/"+ acpid+".js", function(rslt, filename) {
+						app.loadResource("/app_src/"+ acpid+".js", function(rslt, filename) {
 							if (rslt) {
 								var moudule = require("./"+filename);		
 								app.mComponents[acpid] = moudule;
