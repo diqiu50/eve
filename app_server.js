@@ -23,33 +23,40 @@ app_svr.use(cookieParser());
 
 app_svr.use(function(req, res, next) {
 	console.log("access url: " + req.originalUrl);
-	var appid;
-	var url = Url.parse(req.originalUrl, true);
-	if (url.path.indexOf("/appid_") == 0) {
-		appid =  url.path.substring(7, url.path.indexOf("/", 12));			
-		if (AppMgr.getApp(appid)) {
-			req.session.appid = appid;
-		}else {
-			req.session.appid = null;
+
+	function getAppid(req, url) {
+		var ref_url = req.get("Referer");
+		var appid;
+		if (ref_url) {
+			ref_url = Url.parse(ref_url, true);
+			if (ref_url.path.indexOf("/appid_") == 0) {
+				appid =  ref_url.path.substring(7, ref_url.path.indexOf("/", 12));
+				return appid;
+			}
+		} else {
+			if (url.path.indexOf("/appid_") == 0) {
+				appid =  url.path.substring(7, url.path.indexOf("/", 12));
+			} else if (url.query) {
+				if (url.query.appid)
+					appid = url.query.appid;
+			}
 		}
-	} else if (url.query.appid) {
-			appid = url.query.appid;
-		if (AppMgr.getApp(appid)) {
-			req.session.appid = appid;
-		}else {
-			req.session.appid = null;
-		}
+		return appid;
 	}
 
+	var url = Url.parse(req.originalUrl);
+	req.url = url;
+
 	if (req.session.appid) {
-		console.log("access app: " + req.session.appid);
+		console.log("access app 0: " + req.session.appid);
 		next();
 		return;
 	}
 
-	AppMgr.loadApp(req.hostname, url, function(appid) {
+	var appid = getAppid(req, url);
+	function apploadcb(appid) {
 		if (appid) {
-			console.log("load app: " + appid);
+			console.log("load app success: " + appid);
 			req.session.appid = appid;
 		} else {
 			console.log("load app faild : " + url.href);
@@ -57,7 +64,15 @@ app_svr.use(function(req, res, next) {
 			return;
 		}
 		next();
-	});
+	}
+	
+	if (appid) {
+		console.log("load app by id:");
+		AppMgr.loadApp(appid, apploadcb);
+	} else {
+		console.log("load app by url:");
+		AppMgr.loadApp(req.hostname, url.path, apploadcb);
+	}
 });
 
 
@@ -89,7 +104,7 @@ app_svr.use(function(req, res, next) {
 		console.log("505 app not find: " + req.originalUrl);
 		res.send("500 App not find: " + req.originalUrl);
 	} else {
-		var url = Url.parse(req.originalUrl);
+		var url = req.url;
 		app.loadResource(url.path, function (success, file){
 			if (success) {
 				console.log("404 find res: " + file);
@@ -144,12 +159,16 @@ if (cluster.isMaster) {
 */
 
 AppMgr.start(function() {
-	var server = app_svr.listen(8823, function() {
-		var host = server.address().address;
-		var port = server.address().port;
-		console.log("started")
-	});
-	server.on('close', function() {
-		AppMgr.stop();
-	});
+	try {
+		var server = app_svr.listen(AppConfig.web_port, AppConfig.web_ip,  function() {
+			var host = server.address().address;
+			var port = server.address().port;
+			console.log("started")
+		});
+		server.on('close', function() {
+			AppMgr.stop();
+		});
+	}catch(e) {
+		console.log(e.message);
+	}
 });
