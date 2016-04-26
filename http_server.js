@@ -68,15 +68,15 @@ app_svr.use(function(req, res, next) {
 	
 	if (appid) {
 		console.log("load app by id:");
-		AppMgr.loadApp(appid, apploadcb);
+		AppMgr.getApp(appid, apploadcb);
 	} else {
 		console.log("load app by url:");
-		AppMgr.loadApp(req.hostname, url.path, apploadcb);
+		AppMgr.getApp(req.hostname, url.path, apploadcb);
 	}
 });
 
 
-app_svr.use(express.static(AppConfig.web_base, {index:"index.html"}));
+app_svr.use(express.static(AppConfig.http.root, {index:"index.html"}));
 
 
 app_svr.all('/svrcmd/:acpid', function(req, res) {
@@ -105,13 +105,13 @@ app_svr.use(function(req, res, next) {
 		res.send("500 App not find: " + req.originalUrl);
 	} else {
 		var url = req.url;
-		app.loadResource(url.path, function (success, file){
+		app.getResource(url.path, function (success, file){
 			if (success) {
 				console.log("404 find res: " + file);
-				res.sendFile(file, {root: AppConfig.web_base});
+				res.sendFile(file, {root: AppConfig.http.root});
 			} else {
 				console.log("404 url 1: " + req.originalUrl);
-				AppMgr.loadApp(req.hostname, url, function(appid) {
+				AppMgr.getApp(req.hostname, url, function(appid) {
 					if (appid) {
 						console.log("404 load app: " + appid);
 						req.session.appid = appid;
@@ -158,17 +158,11 @@ if (cluster.isMaster) {
 }
 */
 
-AppMgr.start(function() {
-	try {
-		var server = app_svr.listen(AppConfig.web_port, AppConfig.web_ip,  function() {
-			var host = server.address().address;
-			var port = server.address().port;
-			console.log("started")
-		});
-		server.on('close', function() {
-			AppMgr.stop();
-		});
-	}catch(e) {
-		console.log(e.message);
-	}
-});
+function start() {
+	var server = app_svr.listen(AppConfig.http.port, AppConfig.http.ip,  function() {
+		var host = server.address().address;
+		var port = server.address().port;
+		console.log("started:" + host + ":" + port);
+	});
+};
+module.exports = start;

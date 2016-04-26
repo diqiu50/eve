@@ -6,4 +6,5 @@ npm install cookie-parser
 npm install mysql
 npm install mkdirp
 npm install async
+npm install redis
 patch -p0 node_modules/serve-static/index.js < tools/express.patch
