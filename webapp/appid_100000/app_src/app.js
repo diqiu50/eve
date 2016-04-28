@@ -2,7 +2,6 @@
 
 var component = {
 	doAction: function (eventid) {
-		console.log("totol args:"  + arguments.length);
 		switch (arguments.length) {
 			case 2:
 				component[eventid](arguments[1]);	
@@ -23,7 +22,7 @@ var component = {
 	},
 
 	oninit : function(app, callback) {
-		console.log("xxxx");
+		console.log("app init");
 		callback();
 	},
 	onstart : function(app) {

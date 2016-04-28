@@ -81,22 +81,24 @@ var Application = {
 			});
 		}
 
+		app.status = app_conf["status"];
+		if (app.status) {
+			callback(app);
+			return; 
+		}
 
 		function setAppStatus() {
-			/*
-			app.mDb.excubeSql(, function(err, rows){
-				if (err) {
-					error(err);
-				} else {
-					su
-				}
-			});
-			*/
 			return new Promise(function(resolve, reject){
-				resolve();
+				EveService.sysdb.query("update apps_t set status=1 where app_id=" + app.appid, 
+					function(err, rows, fields) {
+					if (err) {
+						reject(err);	
+					}else {
+						resolve();
+					}
+				});
 			});
 		};
-
 		function doAppInit(cmp) {
 			return new Promise(function(resolve, reject){
 				cmp.doAction("oninit", cmp, function(){
@@ -104,23 +106,24 @@ var Application = {
 				});
 			});
 		};
-
 		function createDefDb() {
 			return new Promise(function(resolve, reject){
-				EveService.sysdb.query("create database if not exists appid_" + app.appid, 
-					function(err, rows, fields) {
-					if (err) {
-						reject(err);	
-					}
-					if (rows.length != 1) {
-						resolve()
-					}
-				});
+				if(app.status = 1) {
+					reject();
+				} else {
+					EveService.sysdb.query("create database if not exists appid_" + app.appid, 
+						function(err, rows, fields) {
+						if (err) {
+							reject(err);	
+						}else {
+							resolve();
+						}
+					});
+				}
 			});
 		};
-
 		function getAppInitCmp() {
-			return new Promise(function (success, error) {
+			return new Promise(function(success, error) {
 				app.getComponent("app", function(cmp){
 					if(cmp) {
 						success(cmp);
@@ -130,17 +133,22 @@ var Application = {
 				});	
 			});
 		};
-		
-		createDefDb().then(getAppInitCmp)
+
+
+		createDefDb()
+			.then(getAppInitCmp)
 			.then(doAppInit)
 			.then(setAppStatus)
 			.then(function(){
 				callback(app)
 			})
-			.catch( function(err){
-				console.log("Error" + err)
+			.catch(function(err){
+				if (err) {
+					console.log("Error" + err)
+				}
 				callback(app)
 			});
+		app.status = 1;
 	}
 };
 
