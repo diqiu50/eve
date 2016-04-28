@@ -47,14 +47,18 @@ var AppMgr = {
 					if (rows.length == 1) {
 						//console.log("find app: " + rows[0].app_id);
 						appid = rows[0].app_id;
-						var app = Application.create(appid, rows[0]);
-						AppMgr.smApps[appid] = app;
-						var key = hostname + "_" + url;	
-						AppMgr.smMapping[key] = appid;
+						Application.create(appid, rows[0], function(app) {
+							if (app){
+								AppMgr.smApps[appid] = app;
+								var key = hostname + "_" + url;	
+								AppMgr.smMapping[key] = appid;
+							}
+							callback(appid);
+						});
 					} else {
 						//console.log("not find app: "+ hostname + " " + url);
+						callback(appid);
 					}
-					callback(appid);
 				}
 			);
 		} else if (arguments.length==2) {

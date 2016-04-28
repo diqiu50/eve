@@ -2,15 +2,16 @@
 
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var Promise = require('promise');
 var AppConfig = require('./config');
 var EveService = require('./service');
 
 var Application = {
-	create : function(appid, app_conf, db) {
+	create : function(appid, app_conf, callback) {
 		var app = {};
 		app.appid = appid;
 		app.appname = app_conf["appname"];
-		app.mDb = db;
+		app.mDb = {};
 		app.mResources = [],
 		app.mComponents= [],
 
@@ -18,7 +19,7 @@ var Application = {
 			if (this.mComponents[acpid]) {
 				callback(this.mComponents[acpid]);
 			} else {
-				var filename = AppConfig.http.web_base + "/appid_" + this.appid + "/app_src/" + acpid + ".js";
+				var filename = AppConfig.http.root + "/appid_" + this.appid + "/app_src/" + acpid + ".js";
 				fs.exists(filename, function(exists) {
 					if (!exists) {
 						app.loadResource("/app_src/"+ acpid+".js", function(rslt, filename) {
@@ -57,7 +58,7 @@ var Application = {
 					return;
 				}
 				
-				var filename = AppConfig.web_base + "/appid_" + app.appid + rows[0].uri;
+				var filename = AppConfig.http.root + "/appid_" + app.appid + rows[0].uri;
 				var dirname = filename.substring(0, filename.lastIndexOf('/'));
 				if (!fs.existsSync(dirname)) {
 					mkdirp.sync(dirname);
@@ -80,15 +81,66 @@ var Application = {
 			});
 		}
 
-		var status = app_conf["status"];
-		if (status = "") {
-			app.getComponent("app", function(status, cmp) {
-				if (cmp) {
-					cmp.doAction("oninit", this, callback());
-				} 
+
+		function setAppStatus() {
+			/*
+			app.mDb.excubeSql(, function(err, rows){
+				if (err) {
+					error(err);
+				} else {
+					su
+				}
 			});
-		}
-		return app;
+			*/
+			return new Promise(function(resolve, reject){
+				resolve();
+			});
+		};
+
+		function doAppInit(cmp) {
+			return new Promise(function(resolve, reject){
+				cmp.doAction("oninit", cmp, function(){
+					resolve(1,2);
+				});
+			});
+		};
+
+		function createDefDb() {
+			return new Promise(function(resolve, reject){
+				EveService.sysdb.query("create database if not exists appid_" + app.appid, 
+					function(err, rows, fields) {
+					if (err) {
+						reject(err);	
+					}
+					if (rows.length != 1) {
+						resolve()
+					}
+				});
+			});
+		};
+
+		function getAppInitCmp() {
+			return new Promise(function (success, error) {
+				app.getComponent("app", function(cmp){
+					if(cmp) {
+						success(cmp);
+					} else {
+						error();
+					}
+				});	
+			});
+		};
+		
+		createDefDb().then(getAppInitCmp)
+			.then(doAppInit)
+			.then(setAppStatus)
+			.then(function(){
+				callback(app)
+			})
+			.catch( function(err){
+				console.log("Error" + err)
+				callback(app)
+			});
 	}
 };
 
