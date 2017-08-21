@@ -23,6 +23,8 @@ var component = {
 
 	oninit : function(app, callback) {
 		console.log("app init");
+		app.loadResource("/app_src/init.sql")
+		app.mDb.query("source /app_src/init.mysql
 		callback();
 	},
 	onstart : function(app) {

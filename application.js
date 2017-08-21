@@ -10,6 +10,7 @@ var Application = {
 	create : function(appid, app_conf, callback) {
 		var app = {};
 		app.appid = appid;
+		app.app_src = "/app_src/";
 		app.appname = app_conf["appname"];
 		app.mDb = {};
 		app.mResources = [],
@@ -19,10 +20,10 @@ var Application = {
 			if (this.mComponents[acpid]) {
 				callback(this.mComponents[acpid]);
 			} else {
-				var filename = AppConfig.http.root + "/appid_" + this.appid + "/app_src/" + acpid + ".js";
+				var filename = AppConfig.http.root + "/appid_" + this.appid + app.app_src + acpid + ".js";
 				fs.exists(filename, function(exists) {
 					if (!exists) {
-						app.loadResource("/app_src/"+ acpid+".js", function(rslt, filename) {
+						app.loadResource(app.app_src + acpid+".js", function(rslt, filename) {
 							if (rslt) {
 								var moudule = require("./"+filename);		
 								app.mComponents[acpid] = moudule;
@@ -111,11 +112,21 @@ var Application = {
 				if(app.status = 1) {
 					reject();
 				} else {
-					EveService.sysdb.query("create database if not exists appid_" + app.appid, 
+					var dbname = "appid_" + app.appid;
+					EveService.sysdb.query("create database if not exists appid_" + app.appid + ";" + 
+						"create table if not exisst setting_t( name varcahr(255) ,value varchar(255))",
 						function(err, rows, fields) {
 						if (err) {
 							reject(err);	
 						}else {
+							app.mDb = mysql.createConnection({           
+								host : AppConfig.sysdb.ip,
+								port : AppConfig.sysdb.port,
+								user : AppConfig.sysdb.user,
+								password : AppConfig.sysdb.passowrd,
+								database : dbname
+							});
+							app.mDb.connect();
 							resolve();
 						}
 					});
